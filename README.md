@@ -1,7 +1,9 @@
 ## quotags
 
 Basic Web Crawling project with ExpressJS on NodeJS
-You can find the application here: http://quotag.eu-gb.cf.appdomain.cloud/
+
+You can find the application here:
+http://quotag.eu-gb.cf.appdomain.cloud/
 
 [![](https://img.shields.io/badge/IBM%20Cloud-powered-blue.svg)](https://bluemix.net)
 ![Platform](https://img.shields.io/badge/platform-NODE-lightgrey.svg?style=flat)
