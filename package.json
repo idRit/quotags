@@ -1,0 +1,26 @@
+{
+  "name": "quohash",
+  "version": "1.0.0",
+  "description": "quotes and hashtags",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Mukherjee Ritwik",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "body-parser": "^1.19.0",
+    "cheerio": "^1.0.0-rc.3",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.0",
+    "node-html-parser": "^1.1.15",
+    "request": "^2.88.0",
+    "sentiment": "^5.0.1"
+  },
+  "engines" : { 
+    "node" : ">=8.0.0 <11.0.0" 
+  }
+}
