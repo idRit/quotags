@@ -1,6 +1,6 @@
-## quohash
+## quotags
 
-Basic Web project with ExpressJS on NodeJS
+Basic Web Crawling project with ExpressJS on NodeJS
 
 [![](https://img.shields.io/badge/IBM%20Cloud-powered-blue.svg)](https://bluemix.net)
 ![Platform](https://img.shields.io/badge/platform-NODE-lightgrey.svg?style=flat)
@@ -61,8 +61,8 @@ bx dev run
 
 
 
-##### Endpoints
-##### Quotes
+## Endpoints
+## Quotes
 **getQuoteCountAndPages**
 ----
     Returns Quote Count and Number of pages.
@@ -102,7 +102,7 @@ bx dev run
   * **Code:** 200 <br />
     **Content:** `{ status: 'no such page available' }`
 
-##### Hashtags
+## Hashtags
 **getHashTagsByKey**
 ----
     Returns hashtags related to the key provided.
@@ -142,4 +142,3 @@ To build and debug your app, run:
 bx dev build --debug
 bx dev debug
 ```
-
