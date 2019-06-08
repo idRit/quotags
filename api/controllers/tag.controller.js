@@ -9,6 +9,10 @@ exports.getHashTagsByKey = async (req, res) => {
     }]);
 }
 
+function escapeRegExp(str) {
+    return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+}
+
 async function getHashtags(key) {
     let hashtagsBody = await axios.get('http://best-hashtags.com/hashtag/' + key);
     let hashtags = await parseHashTags(hashtagsBody.data.toString());
