@@ -4,7 +4,8 @@ exports.getHashTagsByKey = async (req, res) => {
     let key = req.params.key;
     let hashtags = await getHashtags(key);
     res.json([{
-        hashtags: hashtags.replace("bhfyp", "quotags")
+        hashtags: hashtags.replace(new RegExp(escapeRegExp('bhfyp'), 'g'), 'quotags')
+        //.replace("bhfyp", "quotags")
     }]);
 }
 
