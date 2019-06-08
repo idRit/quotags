@@ -101,6 +101,7 @@ async function parseQuotes(fullBody, pages, page, totalQuotes) {
         let extractedAuthor = endTagAuthor[i].split(";\n  <span ,")[1];
 
         quotes.push({
+            _id: uuidv4(),
             quoteText: stripHtmlTags(extractedQuote),
             quoteAuthor: extractedAuthor.replace(",", "")
         });
@@ -114,4 +115,11 @@ function stripHtmlTags(str) {
     else
         str = str.toString();
     return str.replace(/<[^>]*>/g, '');
+}
+
+function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
 }
