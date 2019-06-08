@@ -3,9 +3,9 @@ const axios = require('axios');
 exports.getHashTagsByKey = async (req, res) => {
     let key = req.params.key;
     let hashtags = await getHashtags(key);
-    res.json({
-        hashtags: hashtags
-    });
+    res.json([{
+        hashtags: hashtags.replace("bhfyp", "quotags")
+    }]);
 }
 
 async function getHashtags(key) {

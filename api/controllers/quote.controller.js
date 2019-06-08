@@ -66,7 +66,7 @@ async function getPagesAndCount(tag) {
         pages: pages
     }
 }
- 
+
 async function getQuotes(tag, page) {
     let mainBody = await axios.get('https://www.goodreads.com/quotes/tag/' + tag + '?page=' + page);
     let $ = cheerio.load(mainBody.data);
@@ -79,7 +79,7 @@ async function getQuotes(tag, page) {
 
 async function parseQuotes(fullBody, pages, page, totalQuotes) {
     let limit = 30;
-    if (pages-1 < page || page == 0) {
+    if (pages - 1 < page || page == 0) {
         return {
             status: 'no such page available'
         }
@@ -101,9 +101,17 @@ async function parseQuotes(fullBody, pages, page, totalQuotes) {
         let extractedAuthor = endTagAuthor[i].split(";\n  <span ,")[1];
 
         quotes.push({
-            quoteText: extractedQuote,
+            quoteText: stripHtmlTags(extractedQuote),
             quoteAuthor: extractedAuthor.replace(",", "")
         });
     }
     return quotes;
+}
+
+function stripHtmlTags(str) {
+    if ((str === null) || (str === ''))
+        return false;
+    else
+        str = str.toString();
+    return str.replace(/<[^>]*>/g, '');
 }
