@@ -51,7 +51,7 @@ exports.getQuotesByTag = async (req, res) => {
 
 exports.getQuoteCountAndPages = async (req, res) => {
     let tag = req.params.tag;
-    let response = getPagesAndCount(tag);
+    let response = await getPagesAndCount(tag);
     res.json(response);
 }
 
