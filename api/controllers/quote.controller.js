@@ -1,5 +1,9 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
+const QuoteSchema = require('../models/quote.model');
+const QuoteTagSchema = require('../models/QuoteTag.model');
+const QuoteOfDaySchema = require('../models/quoteOfDay.model');
+const words = require('../resources/nouns.json');
 
 exports.getQuotes = (req, res) => {
     let quotes = require('../resources/quotes.json');
@@ -45,7 +49,7 @@ exports.getQuotesByTag = async (req, res) => {
     let tag = req.params.tag;
     let page = req.params.page;
     let quotes = await getQuotes(tag, page);
-
+    storeQuotes(tag);
     res.json(quotes);
 }
 
@@ -53,6 +57,116 @@ exports.getQuoteCountAndPages = async (req, res) => {
     let tag = req.params.tag;
     let response = await getPagesAndCount(tag);
     res.json(response);
+}
+
+exports.getRandomQuotes = async (req, res) => {
+    let quotesArr = [];
+    //let words = ["fashion", "fresh", "new", "cat", "art", "car", "hero", "comic"];
+    let i = 0;
+    while (i < 20) {
+        let randomNumber = Math.floor(Math.random() * 899);
+        //let randomWordI = Math.floor(Math.random() * 7);
+        console.log(randomNumber);
+        let doc = await QuoteSchema.findOne().skip(randomNumber);
+        quotesArr.push(doc);
+        i++;
+    }
+
+    res.json(quotesArr);
+}
+
+exports.getQuoteOfDay = async (req, res) => {
+    try {
+        let docCount = await QuoteOfDaySchema.countDocuments();
+        console.log(docCount);
+        if (docCount === 1) {
+            let qod = await QuoteOfDaySchema.findOne({});
+            if (qod.date !== getDate()) {
+                await QuoteOfDaySchema.deleteMany({});
+                do {
+                    let randomNumber = Math.floor(Math.random() * 1499);
+                    let randomWord = words[randomNumber];
+
+                    let pages = await getPagesAndCount(randomWord);
+                    pages = pages.pages;
+
+                    let randomPageNumber = Math.floor(Math.random() * (pages - 2));
+                    if (randomPageNumber > 0) {
+                        let quotes = await getQuotes(randomWord, randomPageNumber);
+                        if (quotes !== null) {
+                            let randomQuoteI = Math.floor(Math.random() * 29);
+                            console.log(quotes[randomQuoteI]);
+                            let qod = quotes[randomQuoteI];
+                            qod.date = getDate();
+                            let newQod = new QuoteOfDaySchema(qod);
+                            let data = await newQod.save();
+                            res.json(quotes[randomQuoteI]);
+                        }
+                    }
+                } while (true);
+            }
+            res.json(qod);
+        } else {
+            if (!(docCount === 0)) {
+                await QuoteOfDaySchema.deleteMany({});
+            }
+
+            do {
+                let randomNumber = Math.floor(Math.random() * 1499);
+                let randomWord = words[randomNumber];
+
+                let pages = await getPagesAndCount(randomWord);
+                pages = pages.pages;
+
+                let randomPageNumber = Math.floor(Math.random() * (pages - 2));
+                if (randomPageNumber > 0) {
+                    let quotes = await getQuotes(randomWord, randomPageNumber);
+                    if (quotes !== null) {
+                        let randomQuoteI = Math.floor(Math.random() * 29);
+                        console.log(quotes[randomQuoteI]);
+                        let qod = quotes[randomQuoteI];
+                        qod.date = getDate();
+                        let newQod = new QuoteOfDaySchema(qod);
+                        let data = await newQod.save();
+                        res.json(quotes[randomQuoteI]);
+                    }
+                }
+            } while (true);
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function storeQuotes(tag) {
+    let storedTag = await QuoteTagSchema.findOne({ tag: tag });
+
+    if (storedTag !== null) {
+        if (tag === storedTag.tag) {
+            return "here";
+        }
+    }
+
+    let token = {
+        tag: tag
+    }
+    let newTag = new QuoteTagSchema(token);
+    let data = await newTag.save();
+
+    let pagesAndCount = await getPagesAndCount(tag);
+    let quotes = [];
+    for (let i = 1; i < pagesAndCount.pages - 1; i++) {
+        let x = await getQuotes(tag, i);
+        x.tag = tag;
+        quotes.push(x);
+    }
+    let merged = await [].concat.apply([], quotes);
+
+    await merged.forEach(async (quote) => {
+        let newQuote = new QuoteSchema(quote);
+        console.log(quotes);
+        await newQuote.save();
+    });
 }
 
 async function getPagesAndCount(tag) {
@@ -101,7 +215,7 @@ async function parseQuotes(fullBody, pages, page, totalQuotes) {
         let extractedAuthor = endTagAuthor[i].split(";\n  <span ,")[1];
 
         quotes.push({
-            _id: uuidv4(),
+            //_id: uuidv4(),
             quoteText: stripHtmlTags(extractedQuote),
             quoteAuthor: extractedAuthor.replace(",", "")
         });
@@ -122,4 +236,14 @@ function uuidv4() {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
     });
+}
+
+function getDate() {
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = mm + '/' + dd + '/' + yyyy;
+    return today;
 }

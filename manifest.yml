@@ -4,7 +4,7 @@ applications:
   domain: null
   host: null
   instances: 1
-  memory: 256M
+  memory: 128M
   name: quohash
   routes:
   - route: quotag.eu-gb.cf.appdomain.cloud

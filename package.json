@@ -15,12 +15,13 @@
     "cheerio": "^1.0.0-rc.3",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "mongoose": "^5.5.15",
     "node-fetch": "^2.6.0",
     "node-html-parser": "^1.1.15",
     "request": "^2.88.0",
     "sentiment": "^5.0.1"
   },
-  "engines" : { 
-    "node" : ">=8.0.0 <11.0.0" 
+  "engines": {
+    "node": ">=8.0.0 <11.0.0"
   }
 }
