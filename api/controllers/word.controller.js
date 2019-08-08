@@ -1,4 +1,5 @@
 const axios = require('axios');
+let cbks = require('../models/combacks.model');
 
 exports.getRelatedWords = async (req, res) => {
     let word = req.params.word;
@@ -10,6 +11,17 @@ exports.getRelatedWords = async (req, res) => {
 exports.getPopularWords = async (req, res) => {
     let relatedWords = await relatedWordsScraper(null);
     res.json(relatedWords);
+}
+
+exports.getRandomComback = async (req, res) => {
+    let comebacks = await getAllcbks();
+
+    await comebacks.forEach(async (cbcke) => {
+        let newcbc = new cbks(cbcke);
+        await newcbc.save();
+    });
+
+    res.json(comebacks);
 }
 
 async function relatedWordsScraper(word) {
@@ -42,3 +54,23 @@ async function parseBody(word) {
     return parsedBody;
 }
 
+async function parseBody() {
+    let mainBody = await axios.get("https://thoughtcatalog.com/melanie-berliet/2016/02/50-hilarious-comebacks-that-will-shut-everyone-up-and-make-you-look-like-a-genius/");
+    let parsedBody = mainBody.data.toString();
+    return parsedBody;
+}
+
+async function getAllcbks() {
+    let comebacks = [];
+    let fullBody = await parseBody();
+    let startTag = fullBody.split('<p><strong>\d.</strong>');
+    let endTag = startTag.toString().split('</p>\n');
+    endTag.forEach((tag) => {
+        let extractedWord = tag.split('</strong> ')[1];
+        comebacks.push({
+            comeback: extractedWord
+        });
+    });
+    comebacks = comebacks.filter((val) => typeof val.comeback !== "undefined");
+    return comebacks;
+}

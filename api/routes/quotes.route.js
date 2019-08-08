@@ -4,6 +4,7 @@ module.exports = (app) => {
 
     //comented code is for future use!!!
 
+    //app.get('/api/getRandomComback', wordController.getRandomComback);
     //app.get('/api/getQuotes', quoteController.getQuotes);
     //app.get('/api/getQuotesByScore/:sentimentScore', quoteController.getQuotesByScore);
     //app.post('/api/analyzeQuote', quoteController.analyzeQuote);

@@ -6,6 +6,11 @@ exports.getHashTagsByKey = async (req, res) => {
     res.json(hashtags);
 }
 
+exports.getPopularHashtags = async (req, res) => {
+    let hashtags = await getPop();
+    res.json(hashtags);
+}
+
 function escapeRegExp(str) {
     return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
 }
@@ -24,8 +29,6 @@ async function parseHashTags(body) {
     let startTag1 = body.split('<div class="tag-box tag-box-v3 margin-bottom-40">\n<p>');
     let endtag1 = startTag1.toString().split('</p2>\n</div>');
 
-
-
     let extractedHashtags = endtag[0].split('40">\n<p1> ')[1];
     hashtags += extractedHashtags;
 
@@ -38,4 +41,27 @@ async function parseHashTags(body) {
     }];
 
     return eH;
+}
+
+async function parseBody() {
+    let mainBody = await axios.get("https://www.all-hashtag.com/library/contents/ajax_top.php");
+    let parsedBody = mainBody.data.toString();
+    return parsedBody;
+}
+
+async function getPop() {
+    let hashtags = [];
+    let fullBody = await parseBody();
+    console.log(fullBody);
+    let startTag = fullBody.split('<span class="hashtag">');
+    let endTag = startTag.toString().split('</span>');
+    console.log(endTag);
+    endTag.forEach((tag) => {
+       let extractedWord = tag.split(',')[1];
+       hashtags.push({
+           hashtag: extractedWord
+       });
+    });
+    hashtags = hashtags.filter((val) => /(?:\s|^)#[A-Za-z0-9\-\.\_]+(?:\s|$)/g.test(val.hashtag) );
+    return hashtags;
 }
