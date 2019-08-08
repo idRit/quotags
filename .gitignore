@@ -5,3 +5,4 @@ credentials.json
 localdev-config.json
 .bluemix
 node_modules
+config
