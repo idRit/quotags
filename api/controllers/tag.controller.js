@@ -52,10 +52,10 @@ async function parseBody() {
 async function getPop() {
     let hashtags = [];
     let fullBody = await parseBody();
-    console.log(fullBody);
+    //console.log(fullBody);
     let startTag = fullBody.split('<span class="hashtag">');
     let endTag = startTag.toString().split('</span>');
-    console.log(endTag);
+    //console.log(endTag);
     endTag.forEach((tag) => {
        let extractedWord = tag.split(',')[1];
        hashtags.push({
